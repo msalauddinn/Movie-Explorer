@@ -50,6 +50,9 @@ fun HomeScreen() {
     val isFavoriteScreen = remember {
         mutableStateOf(false)
     }
+    val isSearchIconClicked = remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         topBar = {
@@ -70,7 +73,7 @@ fun HomeScreen() {
                 actions = {
                     IconButton(
                         onClick = {
-
+                            isSearchIconClicked.value = true
                         }
                     ) {
                         Icon(
@@ -161,7 +164,7 @@ fun HomeScreen() {
         },
 
         content = { topBarPaddingValues ->
-            SearchBarClickedUI(topBarPaddingValues)
+            if (!isSearchIconClicked.value) MovieCard(topBarPaddingValues) else SearchBarClickedUI(topBarPaddingValues)
         }
     )
 }
