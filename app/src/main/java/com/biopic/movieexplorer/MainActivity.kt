@@ -13,6 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.biopic.movieexplorer.ui.theme.Black
 import com.biopic.movieexplorer.ui.theme.MovieExplorerTheme
 
@@ -27,7 +30,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(Black)
                 ) {
-                    HomeScreen()
+                    MainPage()
                 }
             }
         }
@@ -36,5 +39,17 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainPage() {
+    val navController = rememberNavController()
 
+    NavHost(
+        navController = navController,
+        startDestination = "HomeScreen"
+    ) {
+        composable(route = "HomeScreen") {
+            HomeScreen(navController)
+        }
+        composable(route = "ComingSoon") {
+            Settings(navController)
+        }
+    }
 }

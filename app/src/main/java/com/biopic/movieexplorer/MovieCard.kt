@@ -24,6 +24,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotMutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -38,12 +40,10 @@ import com.biopic.movieexplorer.ui.theme.Black80
 import com.biopic.movieexplorer.ui.theme.White
 
 @Composable
-fun MovieCard(topBarPaddingValues: PaddingValues) {
+fun MovieCard(topBarPaddingValues: PaddingValues, movieList : SnapshotStateList<Movie>) {
 
     val paddingVerticalTotalCard = 12.dp
     val paddingHorizontalTotalCard = 24.dp
-
-    val movieList = dummyMovies()
 
     LazyColumn(
         modifier = Modifier

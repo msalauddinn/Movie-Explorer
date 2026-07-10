@@ -1,8 +1,13 @@
 package com.biopic.movieexplorer
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,15 +39,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.biopic.movieexplorer.ui.theme.Black
-import com.biopic.movieexplorer.ui.theme.Blue
 import com.biopic.movieexplorer.ui.theme.Blue40
 import com.biopic.movieexplorer.ui.theme.Transparent
 import com.biopic.movieexplorer.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController : NavController) {
 
     val isHomeScreen = remember {
         mutableStateOf(true)
@@ -53,6 +58,10 @@ fun HomeScreen() {
     val isSearchIconClicked = remember {
         mutableStateOf(false)
     }
+    val isMoreClicked = remember {
+        mutableStateOf(false)
+    }
+    val movieList = rememberMovies()
 
     Scaffold(
         topBar = {
@@ -73,7 +82,7 @@ fun HomeScreen() {
                 actions = {
                     IconButton(
                         onClick = {
-                            isSearchIconClicked.value = true
+                            isSearchIconClicked.value = !isSearchIconClicked.value
                         }
                     ) {
                         Icon(
@@ -84,19 +93,22 @@ fun HomeScreen() {
                         )
                     }
                     Spacer(modifier = Modifier.width(spacerTopBar))
-                    IconButton(
-                        onClick = {
-
-                        },
-                        modifier = Modifier.padding(end = paddingValueHorizontalTopBar)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert,
-                            contentDescription = "More",
-                            tint = White,
-                            modifier = Modifier
-                                .size(iconSizeTopBar, iconSizeTopBar)
-                        )
+                    Box {
+                        IconButton(
+                            onClick = {
+                                isMoreClicked.value = true
+                            },
+                            modifier = Modifier.padding(end = paddingValueHorizontalTopBar)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = "More",
+                                tint = White,
+                                modifier = Modifier
+                                    .size(iconSizeTopBar, iconSizeTopBar)
+                            )
+                        }
+                        if (isMoreClicked.value) TopBarMoreMenu(isMoreClicked, movieList, navController)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -134,7 +146,7 @@ fun HomeScreen() {
                             Icon(
                                 imageVector = if (isHomeScreen.value) Icons.Filled.Home else Icons.Outlined.Home,
                                 contentDescription = "Home",
-                                tint = if (isHomeScreen.value) Blue else White,
+                                tint = White,
                                 modifier = Modifier
                                     .size(iconSizeBottomBar, iconSizeBottomBar)
                             )
@@ -153,7 +165,7 @@ fun HomeScreen() {
                             Icon(
                                 imageVector = if (isFavoriteScreen.value) Icons.Filled.Favorite else Icons.TwoTone.FavoriteBorder,
                                 contentDescription = "Favorite",
-                                tint = if (isFavoriteScreen.value) Blue else White,
+                                tint = White,
                                 modifier = Modifier
                                     .size(iconSizeBottomBar, iconSizeBottomBar)
                             )
@@ -164,7 +176,11 @@ fun HomeScreen() {
         },
 
         content = { topBarPaddingValues ->
-            if (!isSearchIconClicked.value) MovieCard(topBarPaddingValues) else SearchBarClickedUI(topBarPaddingValues)
+            Column(
+                modifier = Modifier.fillMaxSize().background(Black)
+            ) {
+                if (!isSearchIconClicked.value) MovieCard(topBarPaddingValues, movieList) else SearchBarClickedUI(topBarPaddingValues, movieList)
+            }
         }
     )
 }

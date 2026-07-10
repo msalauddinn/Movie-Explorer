@@ -3,6 +3,9 @@ package com.biopic.movieexplorer
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,6 +36,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -48,24 +52,29 @@ import androidx.compose.ui.unit.sp
 import com.biopic.movieexplorer.ui.theme.Black
 import com.biopic.movieexplorer.ui.theme.Black80
 import com.biopic.movieexplorer.ui.theme.PlaceHolder
+import com.biopic.movieexplorer.ui.theme.TextFieldContainer
 import com.biopic.movieexplorer.ui.theme.White
 
 @Composable
-fun SearchBarClickedUI(topBarPaddingValues: PaddingValues) {
+fun SearchBarClickedUI(topBarPaddingValues: PaddingValues, movieList : SnapshotStateList<Movie>) {
 
     val paddingVerticalTotalCard = 12.dp
     val paddingHorizontalTotalCard = 24.dp
     val focusManager = LocalFocusManager.current
-
-    val movieList = dummyMovies()
     val searchText = remember {
         mutableStateOf("")
+    }
+    val filterMovies = movieList.filter { movie ->
+        movie.movieDescription.contains(searchText.value, ignoreCase = true)
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(topBarPaddingValues)
+            .clickable {
+                focusManager.clearFocus()
+            }
     ) {
         OutlinedTextField(
             value = searchText.value,
@@ -73,13 +82,16 @@ fun SearchBarClickedUI(topBarPaddingValues: PaddingValues) {
                 searchText.value = it
             },
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = White,
-                unfocusedContainerColor = White,
+                focusedContainerColor = TextFieldContainer,
+                unfocusedContainerColor = TextFieldContainer,
 
-                focusedTextColor = Black,
-                unfocusedTextColor = Black,
+                focusedTextColor = White,
+                unfocusedTextColor = White,
 
-                cursorColor = Black
+                focusedIndicatorColor = TextFieldContainer,
+                unfocusedIndicatorColor = TextFieldContainer,
+
+                cursorColor = White
             ),
             leadingIcon = {
                 Icon(
@@ -97,8 +109,8 @@ fun SearchBarClickedUI(topBarPaddingValues: PaddingValues) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 44.dp, vertical = 23.dp),
-            shape = RoundedCornerShape(12.dp),
+                .padding(horizontal = 24.dp, vertical = 23.dp),
+            shape = RoundedCornerShape(50),
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
@@ -118,9 +130,9 @@ fun SearchBarClickedUI(topBarPaddingValues: PaddingValues) {
             )
         ) {
             items(
-                count = movieList.count(),
+                count = filterMovies.count(),
                 itemContent = { index ->
-                    val movie = movieList[index]
+                    val movie = filterMovies[index]
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()

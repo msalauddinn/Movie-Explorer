@@ -6,7 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 
 @Composable
-fun dummyMovies() : SnapshotStateList<Movie>{
+fun rememberMovies() : SnapshotStateList<Movie>{
     val movieList = remember {
         mutableStateListOf(
             Movie(
