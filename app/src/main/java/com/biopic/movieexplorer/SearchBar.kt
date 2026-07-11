@@ -4,8 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.InteractionSource
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -34,6 +34,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -52,6 +53,8 @@ import androidx.compose.ui.unit.sp
 import com.biopic.movieexplorer.ui.theme.Black
 import com.biopic.movieexplorer.ui.theme.Black80
 import com.biopic.movieexplorer.ui.theme.PlaceHolder
+import com.biopic.movieexplorer.ui.theme.Purple
+import com.biopic.movieexplorer.ui.theme.Red
 import com.biopic.movieexplorer.ui.theme.TextFieldContainer
 import com.biopic.movieexplorer.ui.theme.White
 
@@ -66,6 +69,9 @@ fun SearchBarClickedUI(topBarPaddingValues: PaddingValues, movieList : SnapshotS
     }
     val filterMovies = movieList.filter { movie ->
         movie.movieDescription.contains(searchText.value, ignoreCase = true)
+    }
+    val selectedMovieId = remember {
+        mutableIntStateOf(-1)
     }
 
     Column(
@@ -139,7 +145,7 @@ fun SearchBarClickedUI(topBarPaddingValues: PaddingValues, movieList : SnapshotS
                             .padding(bottom = paddingVerticalTotalCard)
                             .height(120.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = Black,
+                            containerColor = if (movie.isWatched) Purple else Black,
                             contentColor = White
                         ),
                         shape = RoundedCornerShape(12.dp),
@@ -189,27 +195,78 @@ fun SearchBarClickedUI(topBarPaddingValues: PaddingValues, movieList : SnapshotS
                                 }
                             }
                             Spacer(modifier = Modifier.width(spacer))
-                            Text(
-                                text = movie.movieDescription,
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                overflow = TextOverflow.Ellipsis,
+                            Row(
                                 modifier = Modifier
-                                    .size(192.dp, 80.dp)
-                            )
-                            Spacer(modifier = Modifier.width(spacer / 2))
-                            IconButton(
-                                onClick = {
-
-                                }
+                                    .fillMaxSize(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    imageVector = Icons.Filled.MoreVert,
-                                    contentDescription = "More",
-                                    tint = White,
+                                Text(
+                                    text = movie.movieDescription,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier
-                                        .size(20.dp, 20.dp)
+                                        .weight(0.7f)
                                 )
+                                Spacer(modifier = Modifier.width(spacer / 2))
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    if (movie.isFavorite) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Favorite,
+                                            contentDescription = "Favorite",
+                                            tint = Red,
+                                            modifier = Modifier.size(16.dp, 16.dp)
+                                        )
+                                        Box{
+                                            IconButton(
+                                                onClick = {
+                                                    selectedMovieId.intValue = movie.movieId
+                                                }
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Filled.MoreVert,
+                                                    contentDescription = "More",
+                                                    tint = White,
+                                                    modifier = Modifier
+                                                        .size(20.dp, 20.dp)
+                                                )
+                                            }
+                                            if (selectedMovieId.intValue == movie.movieId) MovieMenu(
+                                                movie,
+                                                onDismiss = {
+                                                    selectedMovieId.intValue = -1
+                                                }
+                                            )
+                                        }
+                                    }
+                                    else {
+                                        Box{
+                                            IconButton(
+                                                onClick = {
+                                                    selectedMovieId.intValue = movie.movieId
+                                                }
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Filled.MoreVert,
+                                                    contentDescription = "More",
+                                                    tint = White,
+                                                    modifier = Modifier
+                                                        .size(20.dp, 20.dp)
+                                                )
+                                            }
+                                            if (selectedMovieId.intValue == movie.movieId) MovieMenu(
+                                                movie,
+                                                onDismiss = {
+                                                    selectedMovieId.intValue = -1
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

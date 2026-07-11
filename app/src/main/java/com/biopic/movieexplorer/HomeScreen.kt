@@ -1,7 +1,6 @@
 package com.biopic.movieexplorer
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -120,17 +119,15 @@ fun HomeScreen(navController : NavController) {
 
         bottomBar = {
             val iconSizeBottomBar = 36.dp
-            val paddingValueBottomBarHorizontal = 108.dp
 
             BottomAppBar(
                 containerColor = Black,
                 content = {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = paddingValueBottomBarHorizontal),
+                            .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceAround
                     ) {
                         IconButton(
                             onClick = {
