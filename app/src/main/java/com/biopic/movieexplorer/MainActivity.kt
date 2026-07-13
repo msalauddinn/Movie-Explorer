@@ -39,10 +39,10 @@ fun MainPage() {
 
     NavHost(
         navController = navController,
-        startDestination = "HomeScreen"
+        startDestination = "MainScreen"
     ) {
-        composable(route = "HomeScreen") {
-            HomeScreen(navController)
+        composable(route = "MainScreen") {
+            MainScreen(navController)
         }
         composable(route = "ComingSoon") {
             Settings(navController)

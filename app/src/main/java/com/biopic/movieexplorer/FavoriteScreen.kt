@@ -1,12 +1,8 @@
 package com.biopic.movieexplorer
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,34 +12,24 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.biopic.movieexplorer.ui.theme.Black
 import com.biopic.movieexplorer.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    navController : NavController,
-    movieList : SnapshotStateList<Movie>,
-    isSearchIconClicked : MutableState<Boolean>,
-    isMoreClicked : MutableState<Boolean>
-) {
-
+fun FavoriteScreen(isSearchClicked : MutableState<Boolean>) {
     val paddingValueHorizontalTopBar = 36.dp
     val iconSizeTopBar = 32.dp
-    val spacerTopBar = 10.dp
-
     TopAppBar(
         title = {
             Text(
-                text = stringResource(R.string.app_name),
+                text = stringResource(R.string.favorite),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
@@ -53,33 +39,17 @@ fun HomeScreen(
         actions = {
             IconButton(
                 onClick = {
-                    isSearchIconClicked.value = !isSearchIconClicked.value
-                }
+                    isSearchClicked.value = !isSearchClicked.value
+                },
+                modifier = Modifier.padding(end = paddingValueHorizontalTopBar)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Search,
                     contentDescription = "Search",
                     tint = White,
-                    modifier = Modifier.size(iconSizeTopBar, iconSizeTopBar)
+                    modifier = Modifier
+                        .size(iconSizeTopBar, iconSizeTopBar)
                 )
-            }
-            Spacer(modifier = Modifier.width(spacerTopBar))
-            Box {
-                IconButton(
-                    onClick = {
-                        isMoreClicked.value = true
-                    },
-                    modifier = Modifier.padding(end = paddingValueHorizontalTopBar)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.MoreVert,
-                        contentDescription = "More",
-                        tint = White,
-                        modifier = Modifier
-                            .size(iconSizeTopBar, iconSizeTopBar)
-                    )
-                }
-                if (isMoreClicked.value) TopBarMoreMenu(isMoreClicked, movieList, navController)
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
