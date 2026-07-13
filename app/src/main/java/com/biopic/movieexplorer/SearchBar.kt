@@ -34,6 +34,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,9 +68,10 @@ fun SearchBarClickedUI(topBarPaddingValues: PaddingValues, movieList : SnapshotS
     val searchText = remember {
         mutableStateOf("")
     }
-    val filterMovies = movieList.filter { movie ->
+    val filterMovieList = movieList.filter { movie ->
         movie.movieDescription.contains(searchText.value, ignoreCase = true)
     }
+
     val selectedMovieId = remember {
         mutableIntStateOf(-1)
     }
@@ -136,9 +138,9 @@ fun SearchBarClickedUI(topBarPaddingValues: PaddingValues, movieList : SnapshotS
             )
         ) {
             items(
-                count = filterMovies.count(),
+                count = filterMovieList.count(),
                 itemContent = { index ->
-                    val movie = filterMovies[index]
+                    val movie = filterMovieList[index]
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -153,7 +155,7 @@ fun SearchBarClickedUI(topBarPaddingValues: PaddingValues, movieList : SnapshotS
                     ) {
                         val paddingHorizontalContent = 12.dp
                         val paddingVerticalContent = 10.dp
-                        val spacer = 8.dp
+                        val spacer = 12.dp
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -209,7 +211,7 @@ fun SearchBarClickedUI(topBarPaddingValues: PaddingValues, movieList : SnapshotS
                                     modifier = Modifier
                                         .weight(0.7f)
                                 )
-                                Spacer(modifier = Modifier.width(spacer / 2))
+                                Spacer(modifier = Modifier.width(spacer / 3))
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
@@ -269,6 +271,8 @@ fun SearchBarClickedUI(topBarPaddingValues: PaddingValues, movieList : SnapshotS
                                 }
                             }
                         }
+                        if (movie.isDelete) DeleteDialog(movie, movieList)
+                        if (movie.isDetails) DetailsDialog(movie)
                     }
                 }
             )

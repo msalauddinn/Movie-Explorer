@@ -82,7 +82,7 @@ fun MovieCard(topBarPaddingValues: PaddingValues, movieList : SnapshotStateList<
                 ) {
                     val paddingHorizontalContent = 12.dp
                     val paddingVerticalContent = 10.dp
-                    val spacer = 8.dp
+                    val spacer = 12.dp
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -138,7 +138,7 @@ fun MovieCard(topBarPaddingValues: PaddingValues, movieList : SnapshotStateList<
                                 modifier = Modifier
                                     .weight(7f)
                             )
-                            Spacer(modifier = Modifier.width(spacer / 2))
+                            Spacer(modifier = Modifier.width(spacer / 3))
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Center
@@ -198,6 +198,8 @@ fun MovieCard(topBarPaddingValues: PaddingValues, movieList : SnapshotStateList<
                             }
                         }
                     }
+                    if (movie.isDelete) DeleteDialog(movie, movieList)
+                    if (movie.isDetails) DetailsDialog(movie)
                 }
             }
         )

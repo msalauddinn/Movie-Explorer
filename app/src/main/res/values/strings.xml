@@ -13,4 +13,11 @@
         <item>Delete</item>
         <item>Details</item>
     </string-array>
+    <string name="delete">Delete</string>
+    <string name="delete_description">The selected item will be removed from your device permanently. Do you really want to delete?</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="details">Details</string>
+    <string name="title">Title : </string>
+    <string name="duration">Duration : </string>
 </resources>
